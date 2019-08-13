@@ -304,7 +304,7 @@ namespace Microsoft.Azure.Devices.E2ETests
 
         [TestMethod]
         [ExpectedException(typeof(OperationCanceledException))]
-        public async Task DeviceStreaming_WaitForDeviceStreamRequestAsync_5secs_TimesOut_Amqp()
+        public async Task DeviceStreaming_WaitForDeviceStreamRequestAsync_5secs_TimesOut_Sas_Amqp()
         {
             Client.AmqpTransportSettings amqpTransportSettings = new Client.AmqpTransportSettings(Client.TransportType.Amqp_Tcp_Only);
             ITransportSettings[] transportSettings = new ITransportSettings[] { amqpTransportSettings };
@@ -312,7 +312,7 @@ namespace Microsoft.Azure.Devices.E2ETests
             TestDevice testDevice = await TestDevice.GetTestDeviceAsync(DevicePrefix).ConfigureAwait(false);
 
             using (CancellationTokenSource cts = new CancellationTokenSource(TimeSpan.FromSeconds(5)))
-            using (DeviceClient deviceClient = DeviceClient.CreateFromConnectionString(testDevice.ConnectionString, transportSettings))
+            using (DeviceClient deviceClient = testDevice.CreateDeviceClient(transportSettings))
             {
                 await deviceClient.OpenAsync(cts.Token).ConfigureAwait(false);
 
@@ -333,7 +333,7 @@ namespace Microsoft.Azure.Devices.E2ETests
 
         [TestMethod]
         [ExpectedException(typeof(OperationCanceledException))]
-        public async Task DeviceStreaming_WaitForDeviceStreamRequestAsync_5secs_TimesOut_Amqp_WithProxy()
+        public async Task DeviceStreaming_WaitForDeviceStreamRequestAsync_5secs_TimesOut_Sas_Amqp_WithProxy()
         {
             Client.AmqpTransportSettings amqpTransportSettings = new Client.AmqpTransportSettings(Client.TransportType.Amqp_Tcp_Only)
             {
@@ -344,7 +344,7 @@ namespace Microsoft.Azure.Devices.E2ETests
             TestDevice testDevice = await TestDevice.GetTestDeviceAsync(DevicePrefix).ConfigureAwait(false);
 
             using (CancellationTokenSource cts = new CancellationTokenSource(TimeSpan.FromSeconds(5)))
-            using (DeviceClient deviceClient = DeviceClient.CreateFromConnectionString(testDevice.ConnectionString, transportSettings))
+            using (DeviceClient deviceClient = testDevice.CreateDeviceClient(transportSettings))
             {
                 await deviceClient.OpenAsync(cts.Token).ConfigureAwait(false);
 
@@ -365,7 +365,7 @@ namespace Microsoft.Azure.Devices.E2ETests
 
         [TestMethod]
         [ExpectedException(typeof(OperationCanceledException))]
-        public async Task DeviceStreaming_WaitForDeviceStreamRequestAsync_5secs_TimesOut_Mqtt()
+        public async Task DeviceStreaming_WaitForDeviceStreamRequestAsync_5secs_TimesOut_Sas_Mqtt()
         {
             Client.Transport.Mqtt.MqttTransportSettings mqttTransportSettings =
                 new Client.Transport.Mqtt.MqttTransportSettings(Client.TransportType.Mqtt_Tcp_Only);
@@ -374,7 +374,7 @@ namespace Microsoft.Azure.Devices.E2ETests
             TestDevice testDevice = await TestDevice.GetTestDeviceAsync(DevicePrefix).ConfigureAwait(false);
 
             using (CancellationTokenSource cts = new CancellationTokenSource(TimeSpan.FromSeconds(5)))
-            using (DeviceClient deviceClient = DeviceClient.CreateFromConnectionString(testDevice.ConnectionString, transportSettings))
+            using (DeviceClient deviceClient = testDevice.CreateDeviceClient(transportSettings))
             {
                 await deviceClient.OpenAsync(cts.Token).ConfigureAwait(false);
 
@@ -395,7 +395,7 @@ namespace Microsoft.Azure.Devices.E2ETests
 
         [TestMethod]
         [ExpectedException(typeof(OperationCanceledException))]
-        public async Task DeviceStreaming_WaitForDeviceStreamRequestAsync_5secs_TimesOut_Mqtt_WithProxy()
+        public async Task DeviceStreaming_WaitForDeviceStreamRequestAsync_5secs_TimesOut_Sas_Mqtt_WithProxy()
         {
             Client.Transport.Mqtt.MqttTransportSettings mqttTransportSettings =
                 new Client.Transport.Mqtt.MqttTransportSettings(Client.TransportType.Mqtt_Tcp_Only)
@@ -407,7 +407,131 @@ namespace Microsoft.Azure.Devices.E2ETests
             TestDevice testDevice = await TestDevice.GetTestDeviceAsync(DevicePrefix).ConfigureAwait(false);
 
             using (CancellationTokenSource cts = new CancellationTokenSource(TimeSpan.FromSeconds(5)))
-            using (DeviceClient deviceClient = DeviceClient.CreateFromConnectionString(testDevice.ConnectionString, transportSettings))
+            using (DeviceClient deviceClient = testDevice.CreateDeviceClient(transportSettings))
+            {
+                await deviceClient.OpenAsync(cts.Token).ConfigureAwait(false);
+
+                try
+                {
+                    ClientDeviceStreamingRequest clientRequestTask = await deviceClient.WaitForDeviceStreamRequestAsync(cts.Token).ConfigureAwait(false);
+                }
+                catch (IotHubCommunicationException ce)
+                {
+                    throw ce.InnerException;
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            }
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(OperationCanceledException))]
+        public async Task DeviceStreaming_WaitForDeviceStreamRequestAsync_5secs_TimesOut_x509_Amqp()
+        {
+            Client.AmqpTransportSettings amqpTransportSettings = new Client.AmqpTransportSettings(Client.TransportType.Amqp_Tcp_Only);
+            ITransportSettings[] transportSettings = new ITransportSettings[] { amqpTransportSettings };
+
+            TestDevice testDevice = await TestDevice.GetTestDeviceAsync(DevicePrefix, TestDeviceType.X509).ConfigureAwait(false);
+
+            using (CancellationTokenSource cts = new CancellationTokenSource(TimeSpan.FromSeconds(5)))
+            using (DeviceClient deviceClient = testDevice.CreateDeviceClient(transportSettings))
+            {
+                await deviceClient.OpenAsync(cts.Token).ConfigureAwait(false);
+
+                try
+                {
+                    ClientDeviceStreamingRequest clientRequestTask = await deviceClient.WaitForDeviceStreamRequestAsync(cts.Token).ConfigureAwait(false);
+                }
+                catch (IotHubCommunicationException ce)
+                {
+                    throw ce.InnerException;
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            }
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(OperationCanceledException))]
+        public async Task DeviceStreaming_WaitForDeviceStreamRequestAsync_5secs_TimesOut_x509_Amqp_WithProxy()
+        {
+            Client.AmqpTransportSettings amqpTransportSettings = new Client.AmqpTransportSettings(Client.TransportType.Amqp_Tcp_Only)
+            {
+                Proxy = new WebProxy(ProxyServerAddress)
+            };
+            ITransportSettings[] transportSettings = new ITransportSettings[] { amqpTransportSettings };
+
+            TestDevice testDevice = await TestDevice.GetTestDeviceAsync(DevicePrefix, TestDeviceType.X509).ConfigureAwait(false);
+
+            using (CancellationTokenSource cts = new CancellationTokenSource(TimeSpan.FromSeconds(5)))
+            using (DeviceClient deviceClient = testDevice.CreateDeviceClient(transportSettings))
+            {
+                await deviceClient.OpenAsync(cts.Token).ConfigureAwait(false);
+
+                try
+                {
+                    ClientDeviceStreamingRequest clientRequestTask = await deviceClient.WaitForDeviceStreamRequestAsync(cts.Token).ConfigureAwait(false);
+                }
+                catch (IotHubCommunicationException ce)
+                {
+                    throw ce.InnerException;
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            }
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(OperationCanceledException))]
+        public async Task DeviceStreaming_WaitForDeviceStreamRequestAsync_5secs_TimesOut_x509_Mqtt()
+        {
+            Client.Transport.Mqtt.MqttTransportSettings mqttTransportSettings =
+                new Client.Transport.Mqtt.MqttTransportSettings(Client.TransportType.Mqtt_Tcp_Only);
+            ITransportSettings[] transportSettings = new ITransportSettings[] { mqttTransportSettings };
+
+            TestDevice testDevice = await TestDevice.GetTestDeviceAsync(DevicePrefix, TestDeviceType.X509).ConfigureAwait(false);
+
+            using (CancellationTokenSource cts = new CancellationTokenSource(TimeSpan.FromSeconds(5)))
+            using (DeviceClient deviceClient = testDevice.CreateDeviceClient(transportSettings))
+            {
+                await deviceClient.OpenAsync(cts.Token).ConfigureAwait(false);
+
+                try
+                {
+                    ClientDeviceStreamingRequest clientRequestTask = await deviceClient.WaitForDeviceStreamRequestAsync(cts.Token).ConfigureAwait(false);
+                }
+                catch (IotHubCommunicationException ce)
+                {
+                    throw ce.InnerException;
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+            }
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(OperationCanceledException))]
+        public async Task DeviceStreaming_WaitForDeviceStreamRequestAsync_5secs_TimesOut_x509_Mqtt_WithProxy()
+        {
+            Client.Transport.Mqtt.MqttTransportSettings mqttTransportSettings =
+                new Client.Transport.Mqtt.MqttTransportSettings(Client.TransportType.Mqtt_Tcp_Only)
+                {
+                    Proxy = new WebProxy(ProxyServerAddress)
+                };
+            ITransportSettings[] transportSettings = new ITransportSettings[] { mqttTransportSettings };
+
+            TestDevice testDevice = await TestDevice.GetTestDeviceAsync(DevicePrefix, TestDeviceType.X509).ConfigureAwait(false);
+
+            using (CancellationTokenSource cts = new CancellationTokenSource(TimeSpan.FromSeconds(5)))
+            using (DeviceClient deviceClient = testDevice.CreateDeviceClient(transportSettings))
             {
                 await deviceClient.OpenAsync(cts.Token).ConfigureAwait(false);
 
@@ -743,6 +867,144 @@ namespace Microsoft.Azure.Devices.E2ETests
                 HttpProxy = new WebProxy(ProxyServerAddress)
             };
             await TestDeviceStreamingAsync(TestDeviceType.X509, TransportType.Amqp_WebSocket_Only, transportSettings, false).ConfigureAwait(false);
+        }
+
+        [TestMethod]
+        public async Task DeviceStreaming_WaitForDeviceStreamResponseAsync_5secs_TimesOut_Amqp()
+        {
+            using (CancellationTokenSource cts = new CancellationTokenSource(TimeSpan.FromSeconds(5)))
+            using (ServiceClient serviceClient = ServiceClient.CreateFromConnectionString(Configuration.IoTHub.ConnectionString, TransportType.Amqp))
+            {
+                await serviceClient.OpenAsync().ConfigureAwait(false);
+                DeviceStreamRequest deviceStreamRequest = new DeviceStreamRequest(
+                    streamName: "TestStream"
+                );
+                TestDevice testDevice = await TestDevice.GetTestDeviceAsync(DevicePrefix).ConfigureAwait(false);
+
+                try
+                {
+                    DeviceStreamResponse result = await serviceClient.CreateStreamAsync(testDevice.Id, deviceStreamRequest).ConfigureAwait(false);
+                }
+                catch (Exception ex )
+                {
+                    if (ex.GetType() == typeof(Common.Exceptions.DeviceNotFoundException) 
+                        && ex.Message.Contains("Timed out waiting for device to connect."))
+                    {
+                        _log.WriteLine($"Expected exception of type Common.Exceptions.DeviceNotFoundException. Message: {ex.Message}");
+                    }
+                    else
+                    {
+                        throw ex;
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public async Task DeviceStreaming_WaitForDeviceStreamResponseAsync_5secs_TimesOut_Amqp_WithProxy()
+        {
+            using (CancellationTokenSource cts = new CancellationTokenSource(TimeSpan.FromSeconds(5)))
+            using (ServiceClient serviceClient = ServiceClient.CreateFromConnectionString(
+                Configuration.IoTHub.ConnectionString, 
+                TransportType.Amqp, 
+                new ServiceClientTransportSettings()
+                {
+                    AmqpProxy = new WebProxy(ProxyServerAddress),
+                    HttpProxy = new WebProxy(ProxyServerAddress)
+                }))
+            {
+                await serviceClient.OpenAsync().ConfigureAwait(false);
+                DeviceStreamRequest deviceStreamRequest = new DeviceStreamRequest(
+                    streamName: "TestStream"
+                );
+                TestDevice testDevice = await TestDevice.GetTestDeviceAsync(DevicePrefix).ConfigureAwait(false);
+
+                try
+                {
+                    DeviceStreamResponse result = await serviceClient.CreateStreamAsync(testDevice.Id, deviceStreamRequest).ConfigureAwait(false);
+                }
+                catch (Exception ex)
+                {
+                    if (ex.GetType() == typeof(Common.Exceptions.DeviceNotFoundException)
+                        && ex.Message.Contains("Timed out waiting for device to connect."))
+                    {
+                        _log.WriteLine($"Expected exception of type Common.Exceptions.DeviceNotFoundException. Message: {ex.Message}");
+                    }
+                    else
+                    {
+                        throw ex;
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public async Task DeviceStreaming_WaitForDeviceStreamResponseAsync_5secs_TimesOut_AmqpWs()
+        {
+            using (CancellationTokenSource cts = new CancellationTokenSource(TimeSpan.FromSeconds(5)))
+            using (ServiceClient serviceClient = ServiceClient.CreateFromConnectionString(Configuration.IoTHub.ConnectionString, TransportType.Amqp_WebSocket_Only))
+            {
+                await serviceClient.OpenAsync().ConfigureAwait(false);
+                DeviceStreamRequest deviceStreamRequest = new DeviceStreamRequest(
+                    streamName: "TestStream"
+                );
+                TestDevice testDevice = await TestDevice.GetTestDeviceAsync(DevicePrefix).ConfigureAwait(false);
+
+                try
+                {
+                    DeviceStreamResponse result = await serviceClient.CreateStreamAsync(testDevice.Id, deviceStreamRequest).ConfigureAwait(false);
+                }
+                catch (Exception ex)
+                {
+                    if (ex.GetType() == typeof(Common.Exceptions.DeviceNotFoundException)
+                        && ex.Message.Contains("Timed out waiting for device to connect."))
+                    {
+                        _log.WriteLine($"Expected exception of type Common.Exceptions.DeviceNotFoundException. Message: {ex.Message}");
+                    }
+                    else
+                    {
+                        throw ex;
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public async Task DeviceStreaming_WaitForDeviceStreamResponseAsync_5secs_TimesOut_AmqpWs_WithProxy()
+        {
+            using (CancellationTokenSource cts = new CancellationTokenSource(TimeSpan.FromSeconds(5)))
+            using (ServiceClient serviceClient = ServiceClient.CreateFromConnectionString(
+                Configuration.IoTHub.ConnectionString,
+                TransportType.Amqp_WebSocket_Only,
+                new ServiceClientTransportSettings()
+                {
+                    AmqpProxy = new WebProxy(ProxyServerAddress),
+                    HttpProxy = new WebProxy(ProxyServerAddress)
+                }))
+            {
+                await serviceClient.OpenAsync().ConfigureAwait(false);
+                DeviceStreamRequest deviceStreamRequest = new DeviceStreamRequest(
+                    streamName: "TestStream"
+                );
+                TestDevice testDevice = await TestDevice.GetTestDeviceAsync(DevicePrefix).ConfigureAwait(false);
+
+                try
+                {
+                    DeviceStreamResponse result = await serviceClient.CreateStreamAsync(testDevice.Id, deviceStreamRequest).ConfigureAwait(false);
+                }
+                catch (Exception ex)
+                {
+                    if (ex.GetType() == typeof(Common.Exceptions.DeviceNotFoundException)
+                        && ex.Message.Contains("Timed out waiting for device to connect."))
+                    {
+                        _log.WriteLine($"Expected exception of type Common.Exceptions.DeviceNotFoundException. Message: {ex.Message}");
+                    }
+                    else
+                    {
+                        throw ex;
+                    }
+                }
+            }
         }
 
         #endregion Service Client Tests
