@@ -756,7 +756,7 @@ namespace Microsoft.Azure.Devices.E2ETests
 
         private async Task TestDeviceStreamingAsync(TestDeviceType type, TransportType serviceTransportType, ServiceClientTransportSettings serviceTransportSettings, bool acceptRequest)
         {
-            Client.AmqpTransportSettings amqpTransportSettings = new Client.AmqpTransportSettings(Client.TransportType.Amqp);
+            Client.AmqpTransportSettings amqpTransportSettings = new Client.AmqpTransportSettings(Client.TransportType.Amqp_Tcp_Only);
             ITransportSettings[] deviceTransportSettings = new ITransportSettings[] { amqpTransportSettings };
 
             await TestDeviceStreamingAsync(type, deviceTransportSettings, TransportType.Amqp, new ServiceClientTransportSettings(), acceptRequest).ConfigureAwait(false);
@@ -768,7 +768,7 @@ namespace Microsoft.Azure.Devices.E2ETests
 
             using (CancellationTokenSource cts = new CancellationTokenSource(TimeSpan.FromSeconds(60)))
             using (ServiceClient serviceClient = ServiceClient.CreateFromConnectionString(Configuration.IoTHub.ConnectionString, serviceTransportType, serviceTransportSettings))
-            using (DeviceClient deviceClient = DeviceClient.CreateFromConnectionString(testDevice.ConnectionString, deviceTransportSettings))
+            using (DeviceClient deviceClient = testDevice.CreateDeviceClient(deviceTransportSettings))
             {
                 await serviceClient.OpenAsync().ConfigureAwait(false);
                 await deviceClient.OpenAsync(cts.Token).ConfigureAwait(false);
