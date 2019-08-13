@@ -597,6 +597,40 @@ namespace Microsoft.Azure.Devices.E2ETests
             await TestDeviceStreamingAsync(TestDeviceType.Sasl, TransportType.Amqp_WebSocket_Only, transportSettings, true).ConfigureAwait(false);
         }
 
+        [TestMethod]
+        public async Task DeviceStreaming_RequestRejected_Sas_Service_Amqp()
+        {
+            await TestDeviceStreamingAsync(TestDeviceType.Sasl, TransportType.Amqp, new ServiceClientTransportSettings(), false).ConfigureAwait(false);
+        }
+
+        [TestMethod]
+        public async Task DeviceStreaming_RequestRejected_Sas_Service_Amqp_WithProxy()
+        {
+            ServiceClientTransportSettings transportSettings = new ServiceClientTransportSettings()
+            {
+                AmqpProxy = new WebProxy(ProxyServerAddress),
+                HttpProxy = new WebProxy(ProxyServerAddress)
+            };
+            await TestDeviceStreamingAsync(TestDeviceType.Sasl, TransportType.Amqp, transportSettings, false).ConfigureAwait(false);
+        }
+
+        [TestMethod]
+        public async Task DeviceStreaming_RequestRejected_Sas_Service_AmqpWs()
+        {
+            await TestDeviceStreamingAsync(TestDeviceType.Sasl, TransportType.Amqp_WebSocket_Only, new ServiceClientTransportSettings(), false).ConfigureAwait(false);
+        }
+
+        [TestMethod]
+        public async Task DeviceStreaming_RequestRejected_Sas_Service_Amqpws_WithProxy()
+        {
+            ServiceClientTransportSettings transportSettings = new ServiceClientTransportSettings()
+            {
+                AmqpProxy = new WebProxy(ProxyServerAddress),
+                HttpProxy = new WebProxy(ProxyServerAddress)
+            };
+            await TestDeviceStreamingAsync(TestDeviceType.Sasl, TransportType.Amqp_WebSocket_Only, transportSettings, false).ConfigureAwait(false);
+        }
+
         #endregion Service Client Tests
 
         #region Private Methods
@@ -605,6 +639,7 @@ namespace Microsoft.Azure.Devices.E2ETests
         {
             await TestDeviceStreamingAsync(type, deviceTransportSettings, TransportType.Amqp, new ServiceClientTransportSettings(), acceptRequest).ConfigureAwait(false);
         }
+
         private async Task TestDeviceStreamingAsync(TestDeviceType type, TransportType serviceTransportType, ServiceClientTransportSettings serviceTransportSettings, bool acceptRequest)
         {
             Client.AmqpTransportSettings amqpTransportSettings = new Client.AmqpTransportSettings(Client.TransportType.Amqp);
