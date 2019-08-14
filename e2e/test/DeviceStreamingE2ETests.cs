@@ -885,17 +885,15 @@ namespace Microsoft.Azure.Devices.E2ETests
                 {
                     DeviceStreamResponse result = await serviceClient.CreateStreamAsync(testDevice.Id, deviceStreamRequest).ConfigureAwait(false);
                 }
-                catch (Exception ex )
+                catch (Common.Exceptions.DeviceNotFoundException ex )
                 {
-                    if (ex.GetType() == typeof(Common.Exceptions.DeviceNotFoundException) 
-                        && ex.Message.Contains("Timed out waiting for device to connect."))
-                    {
-                        _log.WriteLine($"Expected exception of type Common.Exceptions.DeviceNotFoundException. Message: {ex.Message}");
-                    }
-                    else
-                    {
-                        throw ex;
-                    }
+                    Assert.IsTrue(
+                        ex.Message.Contains("Timed out waiting for device to connect."),
+                        ex.Message);
+                }
+                catch
+                {
+                    throw;
                 }
             }
         }
@@ -923,17 +921,15 @@ namespace Microsoft.Azure.Devices.E2ETests
                 {
                     DeviceStreamResponse result = await serviceClient.CreateStreamAsync(testDevice.Id, deviceStreamRequest).ConfigureAwait(false);
                 }
-                catch (Exception ex)
+                catch (Common.Exceptions.DeviceNotFoundException ex)
                 {
-                    if (ex.GetType() == typeof(Common.Exceptions.DeviceNotFoundException)
-                        && ex.Message.Contains("Timed out waiting for device to connect."))
-                    {
-                        _log.WriteLine($"Expected exception of type Common.Exceptions.DeviceNotFoundException. Message: {ex.Message}");
-                    }
-                    else
-                    {
-                        throw ex;
-                    }
+                    Assert.IsTrue(
+                        ex.Message.Contains("Timed out waiting for device to connect."),
+                        ex.Message);
+                }
+                catch
+                {
+                    throw;
                 }
             }
         }
@@ -954,17 +950,15 @@ namespace Microsoft.Azure.Devices.E2ETests
                 {
                     DeviceStreamResponse result = await serviceClient.CreateStreamAsync(testDevice.Id, deviceStreamRequest).ConfigureAwait(false);
                 }
-                catch (Exception ex)
+                catch (Common.Exceptions.DeviceNotFoundException ex)
                 {
-                    if (ex.GetType() == typeof(Common.Exceptions.DeviceNotFoundException)
-                        && ex.Message.Contains("Timed out waiting for device to connect."))
-                    {
-                        _log.WriteLine($"Expected exception of type Common.Exceptions.DeviceNotFoundException. Message: {ex.Message}");
-                    }
-                    else
-                    {
-                        throw ex;
-                    }
+                    Assert.IsTrue(
+                        ex.Message.Contains("Timed out waiting for device to connect."),
+                        ex.Message);
+                }
+                catch
+                {
+                    throw;
                 }
             }
         }
@@ -992,17 +986,15 @@ namespace Microsoft.Azure.Devices.E2ETests
                 {
                     DeviceStreamResponse result = await serviceClient.CreateStreamAsync(testDevice.Id, deviceStreamRequest).ConfigureAwait(false);
                 }
-                catch (Exception ex)
+                catch (Common.Exceptions.DeviceNotFoundException ex)
                 {
-                    if (ex.GetType() == typeof(Common.Exceptions.DeviceNotFoundException)
-                        && ex.Message.Contains("Timed out waiting for device to connect."))
-                    {
-                        _log.WriteLine($"Expected exception of type Common.Exceptions.DeviceNotFoundException. Message: {ex.Message}");
-                    }
-                    else
-                    {
-                        throw ex;
-                    }
+                    Assert.IsTrue(
+                        ex.Message.Contains("Timed out waiting for device to connect."),
+                        ex.Message);
+                }
+                catch
+                {
+                    throw;
                 }
             }
         }
