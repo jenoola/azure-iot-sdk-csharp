@@ -16,6 +16,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ClientDeviceStreamingRequest = Microsoft.Azure.Devices.Client.DeviceStreamRequest;
 using ServiceDeviceStreamingRequest = Microsoft.Azure.Devices.DeviceStreamRequest;
+using CE = Microsoft.Azure.Devices.Common.Exceptions;
 
 namespace Microsoft.Azure.Devices.E2ETests
 {
@@ -869,6 +870,7 @@ namespace Microsoft.Azure.Devices.E2ETests
             await TestDeviceStreamingAsync(TestDeviceType.X509, TransportType.Amqp_WebSocket_Only, transportSettings, false).ConfigureAwait(false);
         }
 
+        [Ignore]
         [TestMethod]
         public async Task DeviceStreaming_WaitForDeviceStreamResponseAsync_5secs_TimesOut_Amqp()
         {
@@ -885,9 +887,9 @@ namespace Microsoft.Azure.Devices.E2ETests
                 {
                     DeviceStreamResponse result = await serviceClient.CreateStreamAsync(testDevice.Id, deviceStreamRequest).ConfigureAwait(false);
                 }
-                catch (Common.Exceptions.DeviceNotFoundException ex)
+                catch (CE.DeviceNotFoundException ex)
                 {
-                    Assert.Equals(ex.Code, Common.Exceptions.ErrorCode.DeviceTimeout);
+                    Assert.AreEqual(CE.ErrorCode.DeviceTimeout, ex.Code, ex.Message);
                 }
                 catch
                 {
@@ -895,7 +897,8 @@ namespace Microsoft.Azure.Devices.E2ETests
                 }
             }
         }
-
+        
+        [Ignore]
         [TestMethod]
         public async Task DeviceStreaming_WaitForDeviceStreamResponseAsync_5secs_TimesOut_Amqp_WithProxy()
         {
@@ -919,9 +922,9 @@ namespace Microsoft.Azure.Devices.E2ETests
                 {
                     DeviceStreamResponse result = await serviceClient.CreateStreamAsync(testDevice.Id, deviceStreamRequest).ConfigureAwait(false);
                 }
-                catch (Common.Exceptions.DeviceNotFoundException ex)
+                catch (CE.DeviceNotFoundException ex)
                 {
-                    Assert.Equals(ex.Code, Common.Exceptions.ErrorCode.DeviceTimeout);
+                    Assert.AreEqual(CE.ErrorCode.DeviceTimeout, ex.Code, ex.Message);
                 }
                 catch
                 {
@@ -930,6 +933,7 @@ namespace Microsoft.Azure.Devices.E2ETests
             }
         }
 
+        [Ignore]
         [TestMethod]
         public async Task DeviceStreaming_WaitForDeviceStreamResponseAsync_5secs_TimesOut_AmqpWs()
         {
@@ -946,9 +950,9 @@ namespace Microsoft.Azure.Devices.E2ETests
                 {
                     DeviceStreamResponse result = await serviceClient.CreateStreamAsync(testDevice.Id, deviceStreamRequest).ConfigureAwait(false);
                 }
-                catch (Common.Exceptions.DeviceNotFoundException ex)
+                catch (CE.DeviceNotFoundException ex)
                 {
-                    Assert.Equals(ex.Code, Common.Exceptions.ErrorCode.DeviceTimeout);
+                    Assert.AreEqual(CE.ErrorCode.DeviceTimeout, ex.Code, ex.Message);
                 }
                 catch
                 {
@@ -957,6 +961,7 @@ namespace Microsoft.Azure.Devices.E2ETests
             }
         }
 
+        [Ignore]
         [TestMethod]
         public async Task DeviceStreaming_WaitForDeviceStreamResponseAsync_5secs_TimesOut_AmqpWs_WithProxy()
         {
@@ -980,9 +985,9 @@ namespace Microsoft.Azure.Devices.E2ETests
                 {
                     DeviceStreamResponse result = await serviceClient.CreateStreamAsync(testDevice.Id, deviceStreamRequest).ConfigureAwait(false);
                 }
-                catch (Common.Exceptions.DeviceNotFoundException ex)
+                catch (CE.DeviceNotFoundException ex)
                 {
-                    Assert.Equals(ex.Code, Common.Exceptions.ErrorCode.DeviceTimeout);
+                    Assert.AreEqual(CE.ErrorCode.DeviceTimeout, ex.Code, ex.Message);
                 }
                 catch
                 {
