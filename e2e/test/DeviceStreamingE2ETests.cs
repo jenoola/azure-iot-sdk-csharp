@@ -885,11 +885,9 @@ namespace Microsoft.Azure.Devices.E2ETests
                 {
                     DeviceStreamResponse result = await serviceClient.CreateStreamAsync(testDevice.Id, deviceStreamRequest).ConfigureAwait(false);
                 }
-                catch (Common.Exceptions.DeviceNotFoundException ex )
+                catch (Common.Exceptions.DeviceNotFoundException ex)
                 {
-                    Assert.IsTrue(
-                        ex.Message.Contains("Timed out waiting for device to connect."),
-                        ex.Message);
+                    Assert.Equals(ex.Code, Common.Exceptions.ErrorCode.DeviceTimeout);
                 }
                 catch
                 {
@@ -923,9 +921,7 @@ namespace Microsoft.Azure.Devices.E2ETests
                 }
                 catch (Common.Exceptions.DeviceNotFoundException ex)
                 {
-                    Assert.IsTrue(
-                        ex.Message.Contains("Timed out waiting for device to connect."),
-                        ex.Message);
+                    Assert.Equals(ex.Code, Common.Exceptions.ErrorCode.DeviceTimeout);
                 }
                 catch
                 {
@@ -952,9 +948,7 @@ namespace Microsoft.Azure.Devices.E2ETests
                 }
                 catch (Common.Exceptions.DeviceNotFoundException ex)
                 {
-                    Assert.IsTrue(
-                        ex.Message.Contains("Timed out waiting for device to connect."),
-                        ex.Message);
+                    Assert.Equals(ex.Code, Common.Exceptions.ErrorCode.DeviceTimeout);
                 }
                 catch
                 {
@@ -988,9 +982,7 @@ namespace Microsoft.Azure.Devices.E2ETests
                 }
                 catch (Common.Exceptions.DeviceNotFoundException ex)
                 {
-                    Assert.IsTrue(
-                        ex.Message.Contains("Timed out waiting for device to connect."),
-                        ex.Message);
+                    Assert.Equals(ex.Code, Common.Exceptions.ErrorCode.DeviceTimeout);
                 }
                 catch
                 {
