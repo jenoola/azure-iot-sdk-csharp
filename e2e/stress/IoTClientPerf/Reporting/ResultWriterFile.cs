@@ -61,7 +61,11 @@ namespace Microsoft.Azure.Devices.E2ETests
             try
             {
                 await _semaphore.WaitAsync().ConfigureAwait(false);
-                await _writer.FlushAsync().ConfigureAwait(false); ;
+                if (_writer == null)
+                {
+                    await RotateLogFileAsync().ConfigureAwait(false);
+                }
+                await _writer.FlushAsync().ConfigureAwait(false);
             }
             finally
             {

@@ -222,14 +222,21 @@ namespace Microsoft.Azure.Devices.E2ETests
                 return -1;
             }
 
-            ResultWriter resultWriter;
+            ResultWriter resultWriter = null;
             if (o == null)
             {
                 resultWriter = new ResultWriterConsole();
             }
             else
             {
-                resultWriter = new ResultWriterFile(o, TelemetryMetrics.GetHeader());
+                try
+                {
+                    resultWriter = new ResultWriterFile(o, TelemetryMetrics.GetHeader());
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                }
             }
 
             Console.CancelKeyPress += delegate
