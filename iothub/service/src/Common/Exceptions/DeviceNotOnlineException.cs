@@ -12,7 +12,7 @@ namespace Microsoft.Azure.Devices.Common.Exceptions
         {
         }
 
-        public DeviceNotOnlineException(string message, string trackingId, string errorCode) : base(message, trackingId, errorCode)
+        public DeviceNotOnlineException(string message, Exception innerException) : base(message, innerException)
         {
         }
     }

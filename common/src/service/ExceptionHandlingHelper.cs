@@ -30,15 +30,6 @@ namespace Microsoft.Azure.Devices
                     switch (errorCode)
                     {
                         case ErrorCode.DeviceNotOnline:
-                            JObject jObj = JObject.Parse(exMsg);
-                            jObj = jObj.GetValue("Message") as JObject;
-                            if (jObj.Count > 0)
-                            {
-                                return new DeviceNotOnlineException(
-                                    jObj.GetValue("message").Value<string>(),
-                                    jObj.GetValue("trackingId").Value<string>(),
-                                    jObj.GetValue("errorCode").Value<string>());
-                            }
                             return new DeviceNotOnlineException(exMsg);
                     }
                 }
