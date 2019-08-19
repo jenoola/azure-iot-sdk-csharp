@@ -26,6 +26,13 @@ namespace Microsoft.Azure.Devices.Common.Exceptions
             : this(message, false, trackingId)
         {
         }
+        public IotHubException(string message, string trackingId, string errorCode)
+           : this(message, false, trackingId)
+        {
+            ErrorCode code;
+            bool result = Enum.TryParse(errorCode, out code);
+            this.Code = code;
+        }
 
         public IotHubException(string message, bool isTransient, string trackingId)
             : this(message, null, isTransient, trackingId)

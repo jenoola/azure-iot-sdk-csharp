@@ -10,6 +10,7 @@ namespace Microsoft.Azure.Devices
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Collections.Specialized;
     using System.Globalization;
     using System.IO;
     using System.Linq;
@@ -750,8 +751,10 @@ namespace Microsoft.Azure.Devices
 
             // Get any IotHubErrorCode information from the header for special case exemption of exception throwing
             string iotHubErrorCodeAsString = message.Headers.GetFirstValueOrNull(CommonConstants.IotHubErrorCode);
+            string httpErrorCodeAsString = message.Headers.GetFirstValueOrNull(CommonConstants.HttpErrorCodeName);
             ErrorCode iotHubErrorCode;
-            if (Enum.TryParse(iotHubErrorCodeAsString, out iotHubErrorCode))
+            if (Enum.TryParse(iotHubErrorCodeAsString, out iotHubErrorCode) ||
+                Enum.TryParse(httpErrorCodeAsString, out iotHubErrorCode))
             {
                 switch (iotHubErrorCode)
                 {

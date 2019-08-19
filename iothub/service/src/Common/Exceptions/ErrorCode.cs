@@ -40,7 +40,8 @@ namespace Microsoft.Azure.Devices.Common.Exceptions
         JobNotFound = 404002,
         PartitionNotFound = 404003,
         ModuleNotFound = 404010,
-        DeviceTimeout = 404103,
+
+        DeviceTimeout = 404013,
 
         //Conflict - 409
         DeviceAlreadyExists = 409001,
@@ -66,5 +67,8 @@ namespace Microsoft.Azure.Devices.Common.Exceptions
 
         //ServiceUnavailable
         ServiceUnavailable = 503001,
+
+        //Non-specific HTTP Error Codes
+        DeviceNotOnline
     }
 }

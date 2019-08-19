@@ -2,7 +2,6 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
 using Microsoft.Azure.Devices.Client;
-using Microsoft.Azure.Devices.Client.Exceptions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -16,7 +15,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using ClientDeviceStreamingRequest = Microsoft.Azure.Devices.Client.DeviceStreamRequest;
 using ServiceDeviceStreamingRequest = Microsoft.Azure.Devices.DeviceStreamRequest;
-using CE = Microsoft.Azure.Devices.Common.Exceptions;
+using ClientExceptions = Microsoft.Azure.Devices.Client.Exceptions;
+using Microsoft.Azure.Devices.Common.Exceptions;
 
 namespace Microsoft.Azure.Devices.E2ETests
 {
@@ -321,7 +321,7 @@ namespace Microsoft.Azure.Devices.E2ETests
                 {
                     ClientDeviceStreamingRequest clientRequestTask = await deviceClient.WaitForDeviceStreamRequestAsync(cts.Token).ConfigureAwait(false);
                 }
-                catch (IotHubCommunicationException ce)
+                catch (Client.Exceptions.IotHubCommunicationException ce)
                 {
                     throw ce.InnerException;
                 }
@@ -353,7 +353,7 @@ namespace Microsoft.Azure.Devices.E2ETests
                 {
                     ClientDeviceStreamingRequest clientRequestTask = await deviceClient.WaitForDeviceStreamRequestAsync(cts.Token).ConfigureAwait(false);
                 }
-                catch (IotHubCommunicationException ce)
+                catch (ClientExceptions.IotHubCommunicationException ce)
                 {
                     throw ce.InnerException;
                 }
@@ -383,7 +383,7 @@ namespace Microsoft.Azure.Devices.E2ETests
                 {
                     ClientDeviceStreamingRequest clientRequestTask = await deviceClient.WaitForDeviceStreamRequestAsync(cts.Token).ConfigureAwait(false);
                 }
-                catch (IotHubCommunicationException ce)
+                catch (ClientExceptions.IotHubCommunicationException ce)
                 {
                     throw ce.InnerException;
                 }
@@ -416,7 +416,7 @@ namespace Microsoft.Azure.Devices.E2ETests
                 {
                     ClientDeviceStreamingRequest clientRequestTask = await deviceClient.WaitForDeviceStreamRequestAsync(cts.Token).ConfigureAwait(false);
                 }
-                catch (IotHubCommunicationException ce)
+                catch (ClientExceptions.IotHubCommunicationException ce)
                 {
                     throw ce.InnerException;
                 }
@@ -445,7 +445,7 @@ namespace Microsoft.Azure.Devices.E2ETests
                 {
                     ClientDeviceStreamingRequest clientRequestTask = await deviceClient.WaitForDeviceStreamRequestAsync(cts.Token).ConfigureAwait(false);
                 }
-                catch (IotHubCommunicationException ce)
+                catch (ClientExceptions.IotHubCommunicationException ce)
                 {
                     throw ce.InnerException;
                 }
@@ -477,7 +477,7 @@ namespace Microsoft.Azure.Devices.E2ETests
                 {
                     ClientDeviceStreamingRequest clientRequestTask = await deviceClient.WaitForDeviceStreamRequestAsync(cts.Token).ConfigureAwait(false);
                 }
-                catch (IotHubCommunicationException ce)
+                catch (ClientExceptions.IotHubCommunicationException ce)
                 {
                     throw ce.InnerException;
                 }
@@ -507,7 +507,7 @@ namespace Microsoft.Azure.Devices.E2ETests
                 {
                     ClientDeviceStreamingRequest clientRequestTask = await deviceClient.WaitForDeviceStreamRequestAsync(cts.Token).ConfigureAwait(false);
                 }
-                catch (IotHubCommunicationException ce)
+                catch (ClientExceptions.IotHubCommunicationException ce)
                 {
                     throw ce.InnerException;
                 }
@@ -540,7 +540,7 @@ namespace Microsoft.Azure.Devices.E2ETests
                 {
                     ClientDeviceStreamingRequest clientRequestTask = await deviceClient.WaitForDeviceStreamRequestAsync(cts.Token).ConfigureAwait(false);
                 }
-                catch (IotHubCommunicationException ce)
+                catch (ClientExceptions.IotHubCommunicationException ce)
                 {
                     throw ce.InnerException;
                 }
@@ -870,8 +870,8 @@ namespace Microsoft.Azure.Devices.E2ETests
             await TestDeviceStreamingAsync(TestDeviceType.X509, TransportType.Amqp_WebSocket_Only, transportSettings, false).ConfigureAwait(false);
         }
 
-        [Ignore]
         [TestMethod]
+        [ExpectedException(typeof(DeviceNotOnlineException))]
         public async Task DeviceStreaming_WaitForDeviceStreamResponseAsync_5secs_TimesOut_Amqp()
         {
             using (CancellationTokenSource cts = new CancellationTokenSource(TimeSpan.FromSeconds(5)))
@@ -883,23 +883,13 @@ namespace Microsoft.Azure.Devices.E2ETests
                 );
                 TestDevice testDevice = await TestDevice.GetTestDeviceAsync(DevicePrefix).ConfigureAwait(false);
 
-                try
-                {
-                    DeviceStreamResponse result = await serviceClient.CreateStreamAsync(testDevice.Id, deviceStreamRequest).ConfigureAwait(false);
-                }
-                catch (CE.DeviceNotFoundException ex)
-                {
-                    Assert.AreEqual(CE.ErrorCode.DeviceTimeout, ex.Code, ex.Message);
-                }
-                catch
-                {
-                    throw;
-                }
+                DeviceStreamResponse result = await serviceClient.CreateStreamAsync(testDevice.Id, deviceStreamRequest).ConfigureAwait(false);
             }
         }
         
         [Ignore]
         [TestMethod]
+        [ExpectedException(typeof(DeviceNotOnlineException))]
         public async Task DeviceStreaming_WaitForDeviceStreamResponseAsync_5secs_TimesOut_Amqp_WithProxy()
         {
             using (CancellationTokenSource cts = new CancellationTokenSource(TimeSpan.FromSeconds(5)))
@@ -918,23 +908,13 @@ namespace Microsoft.Azure.Devices.E2ETests
                 );
                 TestDevice testDevice = await TestDevice.GetTestDeviceAsync(DevicePrefix).ConfigureAwait(false);
 
-                try
-                {
-                    DeviceStreamResponse result = await serviceClient.CreateStreamAsync(testDevice.Id, deviceStreamRequest).ConfigureAwait(false);
-                }
-                catch (CE.DeviceNotFoundException ex)
-                {
-                    Assert.AreEqual(CE.ErrorCode.DeviceTimeout, ex.Code, ex.Message);
-                }
-                catch
-                {
-                    throw;
-                }
+                DeviceStreamResponse result = await serviceClient.CreateStreamAsync(testDevice.Id, deviceStreamRequest).ConfigureAwait(false);
             }
         }
 
         [Ignore]
         [TestMethod]
+        [ExpectedException(typeof(DeviceNotOnlineException))]
         public async Task DeviceStreaming_WaitForDeviceStreamResponseAsync_5secs_TimesOut_AmqpWs()
         {
             using (CancellationTokenSource cts = new CancellationTokenSource(TimeSpan.FromSeconds(5)))
@@ -946,23 +926,13 @@ namespace Microsoft.Azure.Devices.E2ETests
                 );
                 TestDevice testDevice = await TestDevice.GetTestDeviceAsync(DevicePrefix).ConfigureAwait(false);
 
-                try
-                {
-                    DeviceStreamResponse result = await serviceClient.CreateStreamAsync(testDevice.Id, deviceStreamRequest).ConfigureAwait(false);
-                }
-                catch (CE.DeviceNotFoundException ex)
-                {
-                    Assert.AreEqual(CE.ErrorCode.DeviceTimeout, ex.Code, ex.Message);
-                }
-                catch
-                {
-                    throw;
-                }
+                DeviceStreamResponse result = await serviceClient.CreateStreamAsync(testDevice.Id, deviceStreamRequest).ConfigureAwait(false);
             }
         }
 
         [Ignore]
         [TestMethod]
+        [ExpectedException(typeof(DeviceNotOnlineException))]
         public async Task DeviceStreaming_WaitForDeviceStreamResponseAsync_5secs_TimesOut_AmqpWs_WithProxy()
         {
             using (CancellationTokenSource cts = new CancellationTokenSource(TimeSpan.FromSeconds(5)))
@@ -981,18 +951,7 @@ namespace Microsoft.Azure.Devices.E2ETests
                 );
                 TestDevice testDevice = await TestDevice.GetTestDeviceAsync(DevicePrefix).ConfigureAwait(false);
 
-                try
-                {
-                    DeviceStreamResponse result = await serviceClient.CreateStreamAsync(testDevice.Id, deviceStreamRequest).ConfigureAwait(false);
-                }
-                catch (CE.DeviceNotFoundException ex)
-                {
-                    Assert.AreEqual(CE.ErrorCode.DeviceTimeout, ex.Code, ex.Message);
-                }
-                catch
-                {
-                    throw;
-                }
+                DeviceStreamResponse result = await serviceClient.CreateStreamAsync(testDevice.Id, deviceStreamRequest).ConfigureAwait(false);
             }
         }
 
