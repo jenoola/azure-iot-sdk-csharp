@@ -38,13 +38,6 @@ namespace Microsoft.Azure.Devices.E2ETests
             await DefaultTimeout().ConfigureAwait(false);
         }
 
-        [TestMethod]
-        [ExpectedException(typeof(DeviceNotOnlineException))]
-        public async Task Message_DeviceNotOnline()
-        {
-
-        }
-
         private async Task FastTimeout()
         {
             TimeSpan? timeout = TimeSpan.FromTicks(1);
