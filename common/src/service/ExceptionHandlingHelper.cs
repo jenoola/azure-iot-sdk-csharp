@@ -20,21 +20,7 @@ namespace Microsoft.Azure.Devices
             var mappings = new Dictionary<HttpStatusCode, Func<HttpResponseMessage, Task<Exception>>>();
 
             mappings.Add(HttpStatusCode.NoContent, async (response) => new DeviceNotFoundException(await GetExceptionMessageAsync(response).ConfigureAwait(false)));
-            mappings.Add(HttpStatusCode.NotFound, async (response) =>
-            {
-                string exMsg = await GetExceptionMessageAsync(response).ConfigureAwait(false);
-                string httpErrorCode = response.Headers.GetFirstValueOrNull(CommonConstants.HttpErrorCodeName);
-                ErrorCode errorCode;
-                if (Enum.TryParse(httpErrorCode, out errorCode))
-                {
-                    switch (errorCode)
-                    {
-                        case ErrorCode.DeviceNotOnline:
-                            return new DeviceNotOnlineException(exMsg);
-                    }
-                }
-                return new DeviceNotFoundException(exMsg);
-            });
+            mappings.Add(HttpStatusCode.NotFound, HttpNotFoundMapping);
             mappings.Add(HttpStatusCode.Conflict, async (response) => new DeviceAlreadyExistsException(await GetExceptionMessageAsync(response).ConfigureAwait(false)));
             mappings.Add(HttpStatusCode.BadRequest, async (response) => new ArgumentException(await GetExceptionMessageAsync(response).ConfigureAwait(false)));
             mappings.Add(HttpStatusCode.Unauthorized, async (response) => new UnauthorizedException(await GetExceptionMessageAsync(response).ConfigureAwait(false)));
@@ -51,6 +37,22 @@ namespace Microsoft.Azure.Devices
         public static async Task<string> GetExceptionMessageAsync(HttpResponseMessage response)
         {
             return await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+        }
+
+        private static async Task<Exception> HttpNotFoundMapping(HttpResponseMessage response)
+        {
+            string exMsg = await GetExceptionMessageAsync(response).ConfigureAwait(false);
+            string httpErrorCode = response.Headers.GetFirstValueOrNull(CommonConstants.HttpErrorCodeName);
+            ErrorCode errorCode;
+            if (Enum.TryParse(httpErrorCode, out errorCode))
+            {
+                switch (errorCode)
+                {
+                    case ErrorCode.DeviceNotOnline:
+                        return new DeviceNotOnlineException(exMsg);
+                }
+            }
+            return new DeviceNotFoundException(exMsg);
         }
     }
 }
